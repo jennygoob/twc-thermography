@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.env.local
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+camera-service/__pycache__/
+camera-service/*.pyc
+camera-service/captures/
+camera-service/venv/
+.env.local
