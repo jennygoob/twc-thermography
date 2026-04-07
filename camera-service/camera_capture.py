@@ -48,12 +48,15 @@ def find_thermal_window():
             if win32gui.IsWindowVisible(hwnd):
                 title = win32gui.GetWindowText(hwnd)
                 if title:
-                    # Look for ThermoVision/FLIR windows
                     title_lower = title.lower()
+                    # Skip browser windows
+                    if any(skip in title_lower for skip in ["edge", "chrome", "firefox", "browser"]):
+                        return
+                    # Look for ThermoVision/FLIR windows
                     if any(kw in title_lower for kw in ["thermovision", "flir", "acam", "irmonitor", "thermal", "a300", "a-300"]):
                         results.append((hwnd, title))
-                    # Also check for windows with temperature-like content
-                    if "study" in title_lower or "stream" in title_lower:
+                    # ThermoVision study windows have "Study ID" in title
+                    if "study id" in title_lower or "full body" in title_lower or "disconnect" in title_lower:
                         results.append((hwnd, title))
 
         win32gui.EnumWindows(callback, found)
