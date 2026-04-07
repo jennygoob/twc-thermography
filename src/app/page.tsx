@@ -83,7 +83,11 @@ const STATUS_LABELS: Record<SessionStatus, string> = {
   synced: 'Synced',
 }
 
-const CAMERA_STREAM_URL = 'http://localhost:5050/stream'
+const CAMERA_SERVICE_HOST = process.env.NEXT_PUBLIC_CAMERA_HOST || '192.168.0.236'
+
+function getCameraStreamUrl() {
+  return `http://${CAMERA_SERVICE_HOST}:5050/stream`
+}
 
 // ============================================================
 // PIN Auth Gate
@@ -256,7 +260,6 @@ export default function ThermographyWorkstation() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          patient_id: crypto.randomUUID(),
           patient_name: newPatientName.trim(),
           performed_by: staffName,
         }),
@@ -477,9 +480,9 @@ export default function ThermographyWorkstation() {
               {(cameraStatus?.connected || cameraStatus?.simulation_mode) ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={CAMERA_STREAM_URL}
+                  src={getCameraStreamUrl()}
                   alt="Live thermal feed"
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  style={{ width: '100%', minHeight: 240, objectFit: 'contain' }}
                 />
               ) : (
                 <div style={{
